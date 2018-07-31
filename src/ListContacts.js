@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import escapeRegExp from "escape-string-regexp";
 import sortBy from "sort-by";
@@ -9,9 +10,12 @@ class ListContacts extends Component {
     onDeleteContact: PropTypes.func.isRequired
   };
 
-  state = {
-    query: ""
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      query: ""
+    };
+  }
 
   updateQuery = query => {
     this.setState({ query: query.trim() });
@@ -19,6 +23,12 @@ class ListContacts extends Component {
 
   clearQuery = () => {
     this.setState({ query: "" });
+    let search = document.getElementById("search");
+    search.value = "";
+  };
+
+  getQuery = () => {
+    return this.state.query;
   };
 
   render() {
@@ -35,17 +45,21 @@ class ListContacts extends Component {
     }
 
     showingContacts.sort(sortBy("name"));
-    console.log(query);
+    console.log(this.state.query);
     return (
       <div className="list-contacts">
         <div className="list-contacts-top">
           <input
+            id="search"
             className="search-contacts"
             type="text"
             placeholder="Search Contacts"
-            vlaue={query}
+            vlaue={this.state.query}
             onChange={event => this.updateQuery(event.target.value)}
           />
+          <Link to="/create" className="add-contact">
+            Add Contact
+          </Link>
         </div>
 
         {showingContacts.length !== contacts.length && (
